@@ -131,14 +131,19 @@ with right:
     voice_names_sorted = sort_voices_for_lang(voices, ui_lang)
     # set default voice per lang
     default_voice = T.get("default_voice", voice_names_sorted[0] if voice_names_sorted else "")
+    
     try:
         default_idx = voice_names_sorted.index(default_voice)
     except ValueError:
         default_idx = 0
     voice_name = st.selectbox(T["voice"], voice_names_sorted, index=default_idx)
 
-    rate = st.slider(T["rate"], -100, 100, 0, 1)
-    volume = st.slider(T["volume"], -100, 100, 0, 1)
+    if not voice_name:
+        st.error("Invalid voice selected")
+        st.stop()
+
+    rate = st.slider(T["rate"], -40, 40, 0, 1)
+    volume = st.slider(T["volume"], -40, 40, 0, 1)
     pitch = st.slider(T["pitch"], -50, 50, 0, 1)
     st.write(T["ratevolpitch"].format(rate=to_edge_percent(rate), vol=to_edge_percent(volume), pitch=to_edge_hz(pitch)))
 
